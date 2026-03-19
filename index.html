@@ -2,12 +2,12 @@
 <html lang="pt-BR">
 <head>
 <meta charset="UTF-8">
-<title>Tic Tac Pro</title>
+<title>Tic Tac do Bl4ze</title>
 
 <style>
 body{
   font-family:Segoe UI;
-  background: radial-gradient(circle at top,#0f0c29,#302b63,#24243e);
+  background:#0f172a;
   color:white;
   display:flex;
   flex-direction:column;
@@ -17,121 +17,208 @@ body{
   margin:0;
 }
 
-h1{font-size:32px;}
+/* 🔥 PAINEL */
+.panel{
+  background:#1e293b;
+  padding:12px 20px;
+  border-radius:15px;
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  width:330px;
+  box-shadow:0 10px 25px rgba(0,0,0,0.4);
+  animation:fadeIn 0.6s ease;
+}
 
-#score{margin:10px;font-size:18px;}
+.player{
+  display:flex;
+  gap:10px;
+  align-items:center;
+}
 
-select{margin:5px;padding:5px;border-radius:5px;}
+.player input{
+  width:100px;
+  background:#0f172a;
+  color:white;
+  border:none;
+  border-radius:6px;
+  padding:5px;
+}
 
+#coins{
+  background:#f59e0b;
+  color:black;
+  padding:5px 10px;
+  border-radius:10px;
+  font-weight:bold;
+}
+
+.options{
+  display:flex;
+  gap:5px;
+}
+
+select{
+  background:#0f172a;
+  color:white;
+  border:none;
+  border-radius:6px;
+  padding:5px;
+}
+
+/* 🎮 TABULEIRO */
 #board{
   display:grid;
-  grid-template-columns:repeat(3,100px);
-  gap:10px;
+  grid-template-columns:repeat(3, 100px);
+  gap:12px;
   margin-top:20px;
 }
 
 .cell{
-  width:100px;height:100px;
-  font-size:40px;
-  border:none;
-  border-radius:15px;
-  background:#111;
-  color:white;
+  width:100px;
+  height:100px;
+  border-radius:14px;
+  background:#1e293b;
+  display:flex;
+  align-items:center;
+  justify-content:center;
   cursor:pointer;
-  box-shadow:0 0 10px #6bc2ff, inset 0 0 20px #6bc2ff;
   transition:0.2s;
 }
 
-.cell:hover{transform:scale(1.1);}
+.cell:hover{transform:scale(1.08);}
+.cell:active{transform:scale(0.95);}
 
-#status{margin-top:15px;}
-
-button{margin-top:10px;padding:8px 15px;border:none;border-radius:8px;background:#4ca6ff;color:white;}
-
-.win{animation:pulse 0.5s infinite alternate;}
-@keyframes pulse{from{transform:scale(1);}to{transform:scale(1.15);}}
-
-.particle{
-  position:absolute;
-  width:6px;height:6px;
-  background:gold;
-  border-radius:50%;
-  animation:explode 1s forwards;
+.cell img{
+  width:60px;
+  animation:pop 0.25s ease;
 }
-@keyframes explode{
-  to{transform:translate(var(--x),var(--y));opacity:0;}
+
+/* ✨ ANIMAÇÕES */
+@keyframes pop{
+  from{transform:scale(0); opacity:0;}
+  to{transform:scale(1); opacity:1;}
+}
+
+@keyframes fadeIn{
+  from{opacity:0; transform:translateY(-20px);}
+  to{opacity:1; transform:translateY(0);}
+}
+
+.win{
+  animation:winPulse 0.5s infinite alternate;
+}
+
+@keyframes winPulse{
+  from{transform:scale(1);}
+  to{transform:scale(1.1);}
+}
+
+/* STATUS */
+#status{
+  margin-top:10px;
+  height:20px;
+}
+
+/* BOTÃO */
+button{
+  margin-top:10px;
+  padding:8px 15px;
+  border:none;
+  border-radius:8px;
+  background:#3b82f6;
+  color:white;
+  cursor:pointer;
+  transition:0.2s;
+}
+
+button:hover{transform:scale(1.05);}
+button:active{transform:scale(0.95);}
+
+/* 🛒 LOJA */
+.shop{
+  margin-top:15px;
+  background:#1e293b;
+  padding:10px;
+  border-radius:12px;
+  text-align:center;
+  animation:fadeIn 0.8s ease;
+}
+
+.shop button{
+  margin:5px;
 }
 </style>
 </head>
 
 <body>
 
-<h1>Tic Tac PRO</h1>
+<h1>Tic Tac do Bl4ze</h1>
 
-<div id="score"></div>
+<div class="panel">
+  <div class="player">
+    <input id="name" placeholder="Seu nome">
+    <span id="coins">💰 0</span>
+  </div>
 
-<select id="mode">
-<option value="ai">Vs IA</option>
-<option value="pvp">2 Jogadores</option>
-</select>
+  <div class="options">
+    <select id="mode">
+      <option value="ai">Vs IA</option>
+      <option value="pvp">2 Jogadores</option>
+    </select>
 
-<select id="difficulty">
-<option value="easy">Fácil</option>
-<option value="medium">Médio</option>
-<option value="hard">Impossível</option>
-</select>
+    <select id="difficulty">
+      <option value="easy">Fácil</option>
+      <option value="medium">Médio</option>
+      <option value="hard">Impossível</option>
+    </select>
+  </div>
+</div>
 
 <div id="board"></div>
-<div id="status">Sua vez</div>
+<div id="status"></div>
 <button onclick="resetGame()">Reiniciar</button>
 
-<script>
-const boardEl=document.getElementById("board");
-const statusText=document.getElementById("status");
-const scoreText=document.getElementById("score");
+<div class="shop">
+  <h3>🛒 Loja</h3>
+  <button onclick="buySkin('blue')"> Azul (10)</button>
+  <button onclick="buySkin('green')"> Verde (10)</button>
+  <button onclick="buySkin('red')"> Vermelho (10)</button>
+  <button onclick="buySkin('purple')"> Roxo (10)</button>
+  <button onclick="buySkin('white')">Branco (10)</button>       
+</div>
 
-const mode=document.getElementById("mode");
-const difficulty=document.getElementById("difficulty");
+<script>
+
+// 🔥 PNG AQUI
+const icons = {
+  X: "x.png",
+  O: "o.png"
+};
 
 let board=["","","","","","","","",""];
-let gameOver=false;
 let currentPlayer="X";
+let gameOver=false;
 
-let p=localStorage.getItem("p")||0;
-let a=localStorage.getItem("a")||0;
-
-const winSound=new Audio("https://www.soundjay.com/buttons/sounds/button-3.mp3");
-const moveSound=new Audio("https://www.soundjay.com/buttons/sounds/button-16.mp3");
-const music=new Audio("https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3");
-music.loop=true;music.volume=0.1;music.play();
-
-const wins=[[0,1,2],[3,4,5],[6,7,8],[0,3,6],[1,4,7],[2,5,8],[0,4,8],[2,4,6]];
-
-function rank(s){
- if(s<3)return"🥉 Bronze";
- if(s<6)return"🥈 Prata";
- if(s<10)return"🥇 Ouro";
- return"👑 Mestre";
-}
-
-function updateScore(){
- scoreText.textContent=`Você:${p} (${rank(p)}) | IA:${a}`;
-}
-
-function save(){
- localStorage.setItem("p",p);
- localStorage.setItem("a",a);
-}
+let coins=parseInt(localStorage.getItem("coins")||0);
+let skin=localStorage.getItem("skin")||"default";
+let nameInput=document.getElementById("name");
 
 function create(){
+ const boardEl=document.getElementById("board");
  boardEl.innerHTML="";
  board.forEach((c,i)=>{
-  const b=document.createElement("button");
-  b.className="cell";
-  b.textContent=c;
-  if(c)b.classList.add(c);
-  b.onclick=()=>move(i);
-  boardEl.appendChild(b);
+  const cell=document.createElement("div");
+  cell.className="cell";
+
+  if(c){
+   let img=document.createElement("img");
+   img.src=icons[c];
+   cell.appendChild(img);
+  }
+
+  cell.onclick=()=>move(i);
+  boardEl.appendChild(cell);
  });
 }
 
@@ -139,129 +226,60 @@ function move(i){
  if(board[i]||gameOver)return;
 
  board[i]=currentPlayer;
- playMove();
  update();
 
- if(check(currentPlayer))return end(currentPlayer+" venceu",currentPlayer==="X"?"p":"a");
- if(full())return end("Empate");
+ if(check(currentPlayer)) return end(currentPlayer);
 
- if(mode.value==="pvp"){
+ if(board.every(c=>c)) return end("draw");
+
+ if(document.getElementById("mode").value==="pvp"){
   currentPlayer=currentPlayer==="X"?"O":"X";
-  statusText.textContent="Vez do "+currentPlayer;
  }else{
-  statusText.textContent="IA...";
   setTimeout(ai,300);
  }
 }
 
 function ai(){
- let move;
-
- if(difficulty.value==="easy"){
-  move=random();
- }else if(difficulty.value==="medium"){
-  move=Math.random()<0.5?random():best();
- }else{
-  move=best();
- }
-
+ let empty=board.map((v,i)=>v===""?i:null).filter(v=>v!==null);
+ let move=empty[Math.floor(Math.random()*empty.length)];
  board[move]="O";
- playMove();
  update();
 
- if(check("O"))return end("IA venceu","a");
- if(full())return end("Empate");
+ if(check("O")) return end("O");
+ if(board.every(c=>c)) return end("draw");
 
- statusText.textContent="Sua vez";
-}
-
-function random(){
- let e=board.map((v,i)=>v===""?i:null).filter(v=>v!==null);
- return e[Math.floor(Math.random()*e.length)];
-}
-
-function best(){
- let best=-Infinity,move;
- for(let i=0;i<9;i++){
-  if(!board[i]){
-   board[i]="O";
-   let s=minimax(false);
-   board[i]="";
-   if(s>best){best=s;move=i;}
-  }
- }
- return move;
-}
-
-function minimax(max){
- if(check("O"))return 1;
- if(check("X"))return -1;
- if(full())return 0;
-
- let best=max?-Infinity:Infinity;
-
- for(let i=0;i<9;i++){
-  if(!board[i]){
-   board[i]=max?"O":"X";
-   let s=minimax(!max);
-   board[i]="";
-   best=max?Math.max(best,s):Math.min(best,s);
-  }
- }
- return best;
+ currentPlayer="X";
 }
 
 function check(p){
- return wins.some(c=>c.every(i=>board[i]===p));
-}
+ const wins=[
+  [0,1,2],[3,4,5],[6,7,8],
+  [0,3,6],[1,4,7],[2,5,8],
+  [0,4,8],[2,4,6]
+ ];
 
-function full(){return board.every(c=>c);}
-
-function update(){create();}
-
-function highlight(){
- const cells=document.querySelectorAll(".cell");
- wins.forEach(c=>{
-  if(c.every(i=>board[i]===board[c[0]]&&board[i]!="")){
-   c.forEach(i=>cells[i].classList.add("win"));
+ return wins.some(combo=>{
+  if(combo.every(i=>board[i]===p)){
+    highlight(combo);
+    return true;
   }
  });
 }
 
-function particles(){
- for(let i=0;i<30;i++){
-  let p=document.createElement("div");
-  p.className="particle";
-  p.style.left="50%";
-  p.style.top="50%";
-  p.style.setProperty("--x",(Math.random()*200-100)+"px");
-  p.style.setProperty("--y",(Math.random()*200-100)+"px");
-  document.body.appendChild(p);
-  setTimeout(()=>p.remove(),1000);
- }
+function highlight(combo){
+ const cells=document.querySelectorAll(".cell");
+ combo.forEach(i=>cells[i].classList.add("win"));
 }
 
-function speak(t){
- let msg=new SpeechSynthesisUtterance(t);
- speechSynthesis.speak(msg);
-}
-
-function playMove(){
- moveSound.currentTime=0;
- moveSound.play();
-}
-
-function end(msg,w){
- statusText.textContent=msg;
+function end(winner){
  gameOver=true;
- highlight();
- particles();
- winSound.play();
 
- if(w==="p"){p++;speak("Você venceu");}
- if(w==="a"){a++;speak("A inteligência artificial venceu");}
+ if(winner==="X") coins+=5;
 
- updateScore();
+ document.getElementById("status").textContent=
+  winner==="draw"?"Empate":winner+" venceu";
+
+ updateCoins();
  save();
 }
 
@@ -269,12 +287,45 @@ function resetGame(){
  board=["","","","","","","","",""];
  gameOver=false;
  currentPlayer="X";
- statusText.textContent="Sua vez";
- update();
+ document.getElementById("status").textContent="";
+ create();
 }
 
-updateScore();
+function updateCoins(){
+ document.getElementById("coins").textContent="🪙 "+coins;
+}
+
+function buySkin(type){
+ if(coins<10)return alert("Sem moedas!");
+ coins-=10;
+
+ if(type==="blue") document.body.style.background="#1e3a8a";
+ if(type==="green") document.body.style.background="#064e3b";
+ if(type==="red") document.body.style.background="#7f1d1d";
+ if(type==="purple") document.body.style.background="#5b21b6";
+ if(type==="white") document.body.style.background="#f3f4f6";
+
+ updateCoins();
+ save();
+}
+
+function save(){
+ localStorage.setItem("coins",coins);
+ localStorage.setItem("name",nameInput.value);
+}
+
+function load(){
+ nameInput.value=localStorage.getItem("name")||"";
+ updateCoins();
+}
+
+function update(){
+ create();
+}
+
+load();
 create();
+
 </script>
 
 </body>
